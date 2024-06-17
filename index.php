@@ -2,7 +2,6 @@
 use App\config\ErrorLog;
 use App\config\ResponseHttp;
 
-// Incluye las clases manualmente si no estás usando Composer
 require './config/error_log.php';
 require './config/responseHttp.php';
 // Activar el registro de errores

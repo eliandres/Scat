@@ -4,16 +4,16 @@
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'GET':
             if(isset($_GET['id'])) {
-                echo json_encode(Cliente::getWhere($_GET['id']));
+                echo json_encode(Cliente::obtenerId($_GET['id']));
             }//end if
             else {
-                echo json_encode(Cliente::getAll());
+                echo json_encode(Cliente::lista());
             }//end else
             break;
         case 'POST':
             $datos = json_decode(file_get_contents('php://input'));
             if($datos != NULL) {
-                if(Cliente::insert($datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
+                if(Cliente::insertar($datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
                     http_response_code(200);
                 }//end if
                 else {
@@ -28,7 +28,7 @@
         case 'PUT':
             $datos = json_decode(file_get_contents('php://input'));
             if($datos != NULL) {
-                if(Cliente::update($datos->id, $datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
+                if(Cliente::actualizar($datos->id, $datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
                     http_response_code(200);
                 }//end if
                 else {
@@ -41,7 +41,7 @@
             break;
         case 'DELETE':
             if(isset($_GET['id'])){
-                if(Cliente::delete($_GET['id'])) {
+                if(Cliente::eliminar($_GET['id'])) {
                     http_response_code(200);
                 }//end if
                 else {

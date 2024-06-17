@@ -3,7 +3,7 @@
 
     class Cliente {
 
-        public static function getAll() {
+        public static function lista() {
             $db = new Connection();
             $query = "SELECT *FROM clientes";
             $resultado = $db->query($query);
@@ -24,7 +24,7 @@
             return $datos;
         }//end getAll
 
-        public static function getWhere($id_cliente) {
+        public static function obtenerId($id_cliente) {
             $db = new Connection();
             $query = "SELECT *FROM clientes WHERE id=$id_cliente";
             $resultado = $db->query($query);
@@ -45,7 +45,7 @@
             return $datos;
         }//end getWhere
 
-        public static function insert($nombre, $ap, $am, $fn, $genero) {
+        public static function insertar($nombre, $ap, $am, $fn, $genero) {
             $db = new Connection();
             $query = "INSERT INTO clientes (nombre, ap, am, fn, genero)
             VALUES('".$nombre."', '".$ap."', '".$am."', '".$fn."', '".$genero."')";
@@ -56,7 +56,7 @@
             return FALSE;
         }//end insert
 
-        public static function update($id_cliente, $nombre, $ap, $am, $fn, $genero) {
+        public static function actualizar($id_cliente, $nombre, $ap, $am, $fn, $genero) {
             $db = new Connection();
             $query = "UPDATE clientes SET
             nombre='".$nombre."', ap='".$ap."', am='".$am."', fn='".$fn."', genero='".$genero."' 
@@ -68,7 +68,7 @@
             return FALSE;
         }//end update
 
-        public static function delete($id_cliente) {
+        public static function eliminar($id_cliente) {
             $db = new Connection();
             $query = "DELETE FROM clientes WHERE id=$id_cliente";
             $db->query($query);

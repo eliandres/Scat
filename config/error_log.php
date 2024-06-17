@@ -2,7 +2,7 @@
 
 namespace App\config;
 
-date_default_timezone_set('America/Bogota');
+date_default_timezone_set('America/Managua');
 
 class ErrorLog {
 
