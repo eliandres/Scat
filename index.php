@@ -3,6 +3,13 @@
 use App\config\ErrorLog;
 use App\config\ResponseHttp;
 
+// Bloquear acceso al archivo .env
+if (isset($_SERVER['REQUEST_URI']) && basename($_SERVER['REQUEST_URI']) === '.env') {
+    http_response_code(403);
+    echo "Access denied";
+    exit;
+}
+
 require './config/error_log.php';
 require './config/responseHttp.php';
 require_once './router/endpoints.php';
