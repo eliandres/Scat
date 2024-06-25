@@ -12,7 +12,7 @@ use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 use App\config\ResponseHttp;
 
-class seguridad
+class Seguridad
 {
     private static $jwt_data; // Propiedad para guardar los datos decodificados del JWT 
 

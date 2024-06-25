@@ -16,9 +16,9 @@ class ResponseHttp {
             die(json_encode(ResponseHttp::status401('No tiene autorizacion para consumir esta API')));
         }
 
-        $list = ['http://eli.com'];        
+        $lista = ['http://eli.com'];        
 
-        if (in_array($origin,$list)){
+        if (in_array($origin,$lista)){
 
             if ($method == 'OPTIONS') {
                 header("Access-Control-Allow-Origin: $origin");

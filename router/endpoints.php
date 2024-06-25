@@ -6,7 +6,7 @@ require_once 'config/responseHttp.php';
 
 use App\config\ResponseHttp;
 
-class endpoints
+class Endpoints
 {
     public static function endpoints($route)
     {

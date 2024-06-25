@@ -23,7 +23,7 @@ $route = isset($routes[1]) ? $routes[1] : '';
 if (count($routes) > 1) {
     $route = $routes[1];
     // Manejar las rutas
-    \App\router\endpoints::endpoints($route);
+    \App\router\Endpoints::endpoints($route);
 } else {
     // La URL no tiene el prefijo /api, devolver un archivo text.html como respuesta
     header("Content-Type: text/html");

@@ -5,11 +5,11 @@ require_once 'config/responseHttp.php';
 
 use App\config\ResponseHttp;
 
-use App\config\seguridad;
+use App\config\Seguridad;
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        $tokenCode = seguridad::validaTokenJwt();
+        $tokenCode = Seguridad::validaTokenJwt();
         if (isset($_GET['id'])) {
             echo json_encode(Cliente::obtenerId($_GET['id']));
         } //end if
@@ -18,7 +18,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         } //end else
         break;
     case 'POST':
-        $tokenCode = seguridad::validaTokenJwt();
+        $tokenCode = Seguridad::validaTokenJwt();
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
             if (Cliente::insertar($datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
@@ -34,7 +34,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'PUT':
-        $tokenCode = seguridad::validaTokenJwt();
+        $tokenCode = Seguridad::validaTokenJwt();
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
             if (Cliente::actualizar($datos->id, $datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
@@ -49,7 +49,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         } //end else
         break;
     case 'DELETE':
-        $tokenCode = seguridad::validaTokenJwt();
+        $tokenCode = Seguridad::validaTokenJwt();
         if (isset($_GET['id'])) {
             if (Cliente::eliminar($_GET['id'])) {
                 echo json_encode(ResponseHttp::status200("Registro Eliminado"));

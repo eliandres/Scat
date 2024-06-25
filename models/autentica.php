@@ -6,7 +6,7 @@ require_once "conexion/conectar.php";
 use App\config\ResponseHttp;
 use App\config\seguridad;
 
-class autentica
+class Autentica
 {
     public static function login($usuario, $contraseña)
     {

@@ -12,7 +12,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'POST':
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
-            $token = autentica::login($datos->usuario, $datos->contrasena);
+            $token = Autentica::login($datos->usuario, $datos->contrasena);
             if ($token != NULL) {
                 echo json_encode(ResponseHttp::statusToken200($token));
             } //end if
