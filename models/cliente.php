@@ -4,7 +4,7 @@
     class Cliente {
 
         public static function lista() {
-            $db = new Connection();
+            $db = new Conectar();
             $query = "SELECT *FROM clientes";
             $resultado = $db->query($query);
             $datos = [];
@@ -25,7 +25,7 @@
         }//end getAll
 
         public static function obtenerId($id_cliente) {
-            $db = new Connection();
+            $db = new Conectar();
             $query = "SELECT *FROM clientes WHERE id=$id_cliente";
             $resultado = $db->query($query);
             $datos = [];
@@ -46,7 +46,7 @@
         }//end getWhere
 
         public static function insertar($nombre, $ap, $am, $fn, $genero) {
-            $db = new Connection();
+            $db = new Conectar();
             $query = "INSERT INTO clientes (nombre, ap, am, fn, genero)
             VALUES('".$nombre."', '".$ap."', '".$am."', '".$fn."', '".$genero."')";
             $db->query($query);
@@ -57,7 +57,7 @@
         }//end insert
 
         public static function actualizar($id_cliente, $nombre, $ap, $am, $fn, $genero) {
-            $db = new Connection();
+            $db = new Conectar();
             $query = "UPDATE clientes SET
             nombre='".$nombre."', ap='".$ap."', am='".$am."', fn='".$fn."', genero='".$genero."' 
             WHERE id=$id_cliente";
@@ -69,7 +69,7 @@
         }//end update
 
         public static function eliminar($id_cliente) {
-            $db = new Connection();
+            $db = new Conectar();
             $query = "DELETE FROM clientes WHERE id=$id_cliente";
             $db->query($query);
             if($db->affected_rows) {

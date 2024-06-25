@@ -16,7 +16,7 @@ class ResponseHttp {
             die(json_encode(ResponseHttp::status401('No tiene autorizacion para consumir esta API')));
         }
 
-        $list = ['http://nibiru.test'];        
+        $list = ['http://eli.com'];        
 
         if (in_array($origin,$list)){
 
@@ -48,7 +48,7 @@ class ResponseHttp {
         header('Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE');
         header("Allow: GET, POST, OPTIONS, PUT, PATCH , DELETE");
         header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Authorization"); 
-        //header('Content-Type: application/json'); 
+        header('Content-Type: application/json'); 
     }
 
     public static function status200($res)
@@ -56,6 +56,15 @@ class ResponseHttp {
         http_response_code(200);
         self::$message['status'] = 'ok';
         self::$message['message'] = $res;
+        return self::$message;
+    }
+
+    public static function statusToken200($res)
+    {
+        http_response_code(200);
+        self::$message['status'] = 'ok';
+        self::$message['message'] = "Token Creado";
+        self::$message['data'] = $res;
         return self::$message;
     }
 

@@ -1,0 +1,79 @@
+<?php
+
+namespace App\config;
+// Incluir la biblioteca JWT
+require_once 'libs/php-jwt/src/JWT.php';
+require_once 'libs/php-jwt/src/Key.php';
+require_once 'libs/php-jwt/src/SignatureInvalidException.php';
+require_once 'config/responseHttp.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Firebase\JWT\SignatureInvalidException;
+use App\config\ResponseHttp;
+
+class seguridad
+{
+    private static $jwt_data; // Propiedad para guardar los datos decodificados del JWT 
+
+    final public static function secretaKey()
+    {
+        $key = getenv("SECRETAJWT");
+        if (!$key) {
+            throw new \Exception('Error al cargar la clave secreta');
+        }
+        return $key;
+    }
+
+    final public static function createTokenJwt(array $data)
+    {
+        $key = self::secretaKey();
+        $alg = 'HS256';
+        $payload = [
+            "iat" => time(),
+            "exp" => time() + (60 * 60 * 6),
+            "data" => $data
+        ];
+        return JWT::encode($payload, $key, $alg);
+    }
+
+    /*********************Validar que el JWT sea correcto********************/
+    final public static function validaTokenJwt()
+    {
+        try {
+            if (!isset(getallheaders()['Authorization'])) {
+                echo json_encode(ResponseHttp::status401());
+                exit;
+            }
+
+            $jwt = explode(" ", getallheaders()['Authorization']);
+            $token = $jwt[1]; // Token JWT a decodificar
+
+            $key = self::secretaKey();
+
+            $data = JWT::decode($token, new Key($key, 'HS256'));
+
+            // Guardar los datos decodificados en una propiedad estática
+            self::$jwt_data = $data;
+            return $data;
+        } catch (SignatureInvalidException $e) {
+            echo json_encode(ResponseHttp::status401());
+            exit;
+        } catch (\Exception $e) {
+            error_log($e);
+            echo json_encode(ResponseHttp::status400());
+            exit;
+        }
+    }
+
+    /***************Devolver los datos del JWT decodificados****************/
+    final public static function getDataJwt()
+    {
+        if (!self::$jwt_data) {
+            throw new \Exception('No hay datos JWT disponibles');
+        }
+
+        $jwt_decoded_array = json_decode(json_encode(self::$jwt_data), true);
+        return $jwt_decoded_array['data'];
+    }
+}

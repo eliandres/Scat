@@ -11,3 +11,6 @@ Thumbs.db
 
 # Ignorar archivos generados
 /public/build/
+
+# Ignorar archivos generados
+/libs

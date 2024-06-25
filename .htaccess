@@ -4,5 +4,5 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+    RewriteRule ^([0-9a-zA-Z-_@./]+)$ index.php?route=$1 [QSA,L]
 </IfModule>

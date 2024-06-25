@@ -1,9 +1,11 @@
 <?php
+
 use App\config\ErrorLog;
 use App\config\ResponseHttp;
 
 require './config/error_log.php';
 require './config/responseHttp.php';
+require_once './router/endpoints.php';
 // Activar el registro de errores
 ErrorLog::activateErrorLog();
 
@@ -16,12 +18,4 @@ $routes = explode('/api/', $url);
 $route = isset($routes[1]) ? $routes[1] : '';
 
 // Manejar las rutas
-switch ($route) {
-    case 'cliente':
-        require './router/cliente.php'; // Incluir el controlador correspondiente para la ruta cliente
-        break;
-        // Agregar más casos para otras rutas si es necesario
-    default:
-        echo json_encode(ResponseHttp::status400());
-        break;
-}
+\App\router\endpoints::endpoints($route);
