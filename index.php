@@ -3,16 +3,10 @@
 use App\config\ErrorLog;
 use App\config\ResponseHttp;
 
-// Bloquear acceso al archivo .env
-if (isset($_SERVER['REQUEST_URI']) && basename($_SERVER['REQUEST_URI']) === '.env') {
-    http_response_code(403);
-    echo "Access denied";
-    exit;
-}
-
 require './config/error_log.php';
 require './config/responseHttp.php';
 require_once './router/endpoints.php';
+
 // Activar el registro de errores
 ErrorLog::activateErrorLog();
 
@@ -24,5 +18,15 @@ $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $routes = explode('/api/', $url);
 $route = isset($routes[1]) ? $routes[1] : '';
 
-// Manejar las rutas
-\App\router\endpoints::endpoints($route);
+
+// Verificar si la URL tiene el prefijo /api
+if (count($routes) > 1) {
+    $route = $routes[1];
+    // Manejar las rutas
+    \App\router\endpoints::endpoints($route);
+} else {
+    // La URL no tiene el prefijo /api, devolver un archivo text.html como respuesta
+    header("Content-Type: text/html");
+    readfile("./www/index.html");
+    exit;
+}

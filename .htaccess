@@ -1,8 +1,29 @@
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /proyecto/
+    Options All -Indexes
 
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Prevenir acceso al archivo .htaccess
+    <Files .htaccess>
+        Order allow,deny
+        Deny from all
+    </Files>
+
+    # Prevenir acceso al archivo .env
+    <Files .env>
+        Order allow,deny
+        Deny from all
+    </Files>
+
+    # Bloqueo del bot BotMalo
+    SetEnvIfNoCase User-Agent "BotMalo/" spambot
+    SetEnvIfNoCase Request_URI "/firefoxz.php$" spambot
+    SetEnvIfNoCase Referer "^http://www.spammers.com/" spambot
+    Deny from env=spambot
+
+    # Camuflar archivos PHP como eli
+    AddType application/x-httpd-php .eli
+
+    # URL amigable con un solo parametro
     RewriteRule ^([0-9a-zA-Z-_@./]+)$ index.php?route=$1 [QSA,L]
 </IfModule>

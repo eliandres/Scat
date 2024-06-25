@@ -25,6 +25,7 @@ class seguridad
         return $key;
     }
 
+    /*********************Crea el Token********************/
     final public static function createTokenJwt(array $data)
     {
         $key = self::secretaKey();
@@ -75,5 +76,23 @@ class seguridad
 
         $jwt_decoded_array = json_decode(json_encode(self::$jwt_data), true);
         return $jwt_decoded_array['data'];
+    }
+
+    /********Encriptar la contraseña del usuario***********/
+    final public static function createPassword(string $pw)
+    {
+        $pass = password_hash($pw, PASSWORD_DEFAULT);
+        return $pass;
+    }
+
+    /*****************Validar que las contraseñas coincidan****************/
+    final public static function validateContrasena(string $pw, string $pwh)
+    {
+        if (password_verify($pw, $pwh)) {
+            return true;
+        } else {
+            error_log('La contraseña es incorrecta');
+            return false;
+        }
     }
 }
