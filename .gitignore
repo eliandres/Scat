@@ -14,3 +14,7 @@ Thumbs.db
 
 # Ignorar archivos generados
 /libs
+
+# Ignorar las carpetas creadas por angular
+/www/browser
+/www/server

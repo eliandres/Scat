@@ -46,10 +46,10 @@ class Seguridad
                 echo json_encode(ResponseHttp::status401());
                 exit;
             }
-
+            
             $jwt = explode(" ", getallheaders()['Authorization']);
             $token = $jwt[1]; // Token JWT a decodificar
-
+            ;
             $key = self::secretaKey();
 
             $data = JWT::decode($token, new Key($key, 'HS256'));

@@ -15,18 +15,29 @@ ResponseHttp::headerHttpDev($_SERVER['REQUEST_METHOD']);
 
 // Obtener la ruta de la URL amigable
 $url = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$routes = explode('/api/', $url);
-$route = isset($routes[1]) ? $routes[1] : '';
-
 
 // Verificar si la URL tiene el prefijo /api
-if (count($routes) > 1) {
-    $route = $routes[1];
-    // Manejar las rutas
+if (strpos($url, '/api/') === 0) {
+    // Manejar las rutas de la API
+    $route = substr($url, strlen('/api/'));
     \App\router\Endpoints::endpoints($route);
 } else {
-    // La URL no tiene el prefijo /api, devolver un archivo text.html como respuesta
-    header("Content-Type: text/html");
-    readfile("./www/index.html");
-    exit;
+    // Verificar si el archivo solicitado existe
+    $filePath = __DIR__ . '/www/browser' . $url;
+
+    if (file_exists($filePath) && !is_dir($filePath)) {
+        // Devolver el archivo solicitado
+        $mimeType = mime_content_type($filePath);
+        header("Content-Type: $mimeType");
+        readfile($filePath);
+        exit;
+    } else {
+        // La URL no tiene el prefijo /api y no es un archivo estático, devolver index.html para que Angular maneje las rutas
+        header("Content-Type: text/html");
+
+        // La URL no tiene el prefijo /api y no es un archivo estático, devolver index.html para que Angular maneje las rutas
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        readfile(__DIR__ . '/www/browser/index.html');
+        exit;
+    }
 }

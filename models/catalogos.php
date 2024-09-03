@@ -1,52 +1,48 @@
 <?php
 require_once "conexion/conectar.php";
 
-class Cliente
+class Catalogos
 {
 
     public static function lista()
     {
         $db = new Conectar();
-        $query = "CALL obtenerClientes()";
+        $query = "CALL obtenerCatalogo()";
         $resultado = $db->query($query);
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
                 $datos[] = [
-                    'id' => $row['id'],
-                    'nombre' => $row['nombre'],
-                    'ap' => $row['ap'],
-                    'am' => $row['am'],
-                    'fn' => $row['fn'],
-                    'genero' => $row['genero']
+                    'descripcion' => $row['Descripcion'],
+                    'idCatalogo' => $row['IdCatalogo'],
+                    'codigoInterno' => $row['CodigoInterno'],
+                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
                 ];
-            } 
+            }
             return $datos;
-        } 
+        }
         return $datos;
-    } 
+    }
 
-    public static function obtenerId($id_cliente)
+    public static function obtenerId($Codigo)
     {
         $db = new Conectar();
-        $stmt = $db->prepare("CALL obtenerClienteId(?)");
-        $stmt->bind_param("i", $id_cliente);
+        $stmt = $db->prepare("CALL obtenerCatalogoPorCodigo(?)");
+        $stmt->bind_param("s", $Codigo);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
                 $datos[] = [
-                    'id' => $row['id'],
-                    'nombre' => $row['nombre'],
-                    'ap' => $row['ap'],
-                    'am' => $row['am'],
-                    'fn' => $row['fn'],
-                    'genero' => $row['genero']
+                    'descripcion' => $row['Descripcion'],
+                    'idCatalogo' => $row['IdCatalogo'],
+                    'codigoInterno' => $row['CodigoInterno'],
+                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
                 ];
             }
+            return $datos;
         }
-        $stmt->close();
         return $datos;
     }
 
@@ -58,9 +54,9 @@ class Cliente
         $db->query($query);
         if ($db->affected_rows) {
             return TRUE;
-        } 
+        }
         return FALSE;
-    } 
+    }
 
     public static function actualizar($id_cliente, $nombre, $ap, $am, $fn, $genero)
     {

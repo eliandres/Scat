@@ -1,24 +1,21 @@
 <?php
 require_once "conexion/conectar.php";
 
-class Cliente
+class Entidades
 {
 
     public static function lista()
     {
         $db = new Conectar();
-        $query = "CALL obtenerClientes()";
+        $query = "CALL obtenerEntidades()";
         $resultado = $db->query($query);
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
                 $datos[] = [
-                    'id' => $row['id'],
-                    'nombre' => $row['nombre'],
-                    'ap' => $row['ap'],
-                    'am' => $row['am'],
-                    'fn' => $row['fn'],
-                    'genero' => $row['genero']
+                    'idEntidad' => $row['IdEntidad'],
+                    'descripcion' => $row['Descripcion'],
+                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
                 ];
             } 
             return $datos;

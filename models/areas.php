@@ -1,24 +1,22 @@
 <?php
 require_once "conexion/conectar.php";
 
-class Cliente
+class Areas
 {
 
     public static function lista()
     {
         $db = new Conectar();
-        $query = "CALL obtenerClientes()";
+        $query = "CALL obtenerAreas()";
         $resultado = $db->query($query);
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
                 $datos[] = [
-                    'id' => $row['id'],
-                    'nombre' => $row['nombre'],
-                    'ap' => $row['ap'],
-                    'am' => $row['am'],
-                    'fn' => $row['fn'],
-                    'genero' => $row['genero']
+                    'idArea' => $row['IdArea'],
+                    'descripcion' => $row['Descripcion'],
+                    'formulario' => $row['Formulario'],
+                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
                 ];
             } 
             return $datos;
@@ -26,23 +24,21 @@ class Cliente
         return $datos;
     } 
 
-    public static function obtenerId($id_cliente)
+    public static function obtenerId($id_areas)
     {
         $db = new Conectar();
-        $stmt = $db->prepare("CALL obtenerClienteId(?)");
-        $stmt->bind_param("i", $id_cliente);
+        $stmt = $db->prepare("CALL obtenerAreasId(?)");
+        $stmt->bind_param("i", $id_areas);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
-                $datos[] = [
-                    'id' => $row['id'],
-                    'nombre' => $row['nombre'],
-                    'ap' => $row['ap'],
-                    'am' => $row['am'],
-                    'fn' => $row['fn'],
-                    'genero' => $row['genero']
+                $datos = [
+                    'idArea ' => $row['IdArea'],
+                    'descripcion' => $row['Descripcion'],
+                    'formulario' => $row['Formulario'],
+                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
                 ];
             }
         }

@@ -17,7 +17,7 @@ class Autentica
             $datos = [];
 
             if ($resultado->num_rows == 0) {
-                return ResponseHttp::status400('El usuario o contraseña son incorrectos');
+                return ResponseHttp::status400("El usuario o contraseña son incorrectos");
             } else {
                 while ($row = $resultado->fetch_assoc()) {
                     if (seguridad::validateContrasena($contraseña, $row['Contrasena'])) {
@@ -29,7 +29,6 @@ class Autentica
                         $datos = [
                             'idUsuario' => $row['IdUsuario'],
                             'usuario' => $row['NombreUsuario'],
-                            'telefono' => $row['Telefono'],
                             'token' => $token
                         ];
                     } else {

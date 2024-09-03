@@ -1,7 +1,7 @@
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
     Options All -Indexes
+    RewriteBase /
 
     # Prevenir acceso al archivo .htaccess
     <Files .htaccess>
@@ -21,9 +21,38 @@
     SetEnvIfNoCase Referer "^http://www.spammers.com/" spambot
     Deny from env=spambot
 
-    # Camuflar archivos PHP como eli
-    AddType application/x-httpd-php .eli
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule ^(.*) - [E=HTTP_AUTHORIZATION:%1]
 
-    # URL amigable con un solo parametro
+    # Asegurarse de que los archivos y directorios existentes se sirvan correctamente
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # URL amigable con un solo parámetro
     RewriteRule ^([0-9a-zA-Z-_@./]+)$ index.php?route=$1 [QSA,L]
+    
+    # Redirigir todas las demás solicitudes a Angular (index.html)
+    RewriteRule ^index\.html$ - [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+  
 </IfModule>
+
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "http://localhost:4200"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Manejo de solicitudes OPTIONS (preflight)
+<If "%{REQUEST_METHOD} == 'OPTIONS'">
+    Header set Access-Control-Allow-Origin "http://localhost:4200"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+    Header set Access-Control-Max-Age "86400"
+    Require all granted
+</If>

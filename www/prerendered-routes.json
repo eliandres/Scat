@@ -1,0 +1,11 @@
+{
+  "routes": [
+    "/",
+    "/sistema",
+    "/sistema/com",
+    "/sistema/inventario",
+    "/sistema/inventario/busquedad",
+    "/sistema/inventario/geolocalizacion",
+    "/sistema/inventario/reportes"
+  ]
+}
