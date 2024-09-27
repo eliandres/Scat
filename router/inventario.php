@@ -19,6 +19,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
     case 'POST':
         $tokenCode = Seguridad::validaTokenJwt();
+        if (!$tokenCode) {
+            echo json_encode(ResponseHttp::status404()); // Token no válido
+            break;
+        }
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
             $valor = Inventario::insertar(
@@ -29,6 +33,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $datos->IdCatalogoHistorial,
                 $datos->NombreResponsable,
                 $datos->UbicacionActual,
+                $datos->FechaInicial,
+                $datos->FechaFinalizacion,
                 $datos->RevisionInterno,
                 $datos->RevisionExterno,
             );
@@ -46,10 +52,28 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'PUT':
         $tokenCode = Seguridad::validaTokenJwt();
+        if (!$tokenCode) {
+            echo json_encode(ResponseHttp::status404()); // Token no válido
+            break;
+        }
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
-            if (Inventario::actualizar($datos->id, $datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
-                echo json_encode(ResponseHttp::status200("Registro Actualizado"));
+            $valor = Inventario::actualizar(
+                $datos->IdInventario,
+                $datos->IdMaestroFormato,
+                $datos->IdArticulo,
+                $datos->IdCatalogoClasificacion,
+                $datos->IdCatalogoIdentificador,
+                $datos->IdCatalogoHistorial,
+                $datos->NombreResponsable,
+                $datos->UbicacionActual,
+                $datos->FechaInicial,
+                $datos->FechaFinalizacion,
+                $datos->RevisionInterno,
+                $datos->RevisionExterno,
+            );
+            if ($valor) {
+                echo json_encode(ResponseHttp::status201($valor));
             } //end if
             else {
                 echo json_encode(ResponseHttp::status400());

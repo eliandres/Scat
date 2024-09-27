@@ -46,7 +46,7 @@ class Seguridad
                 echo json_encode(ResponseHttp::status401());
                 exit;
             }
-            
+
             $jwt = explode(" ", getallheaders()['Authorization']);
             $token = $jwt[1]; // Token JWT a decodificar
             ;
@@ -94,5 +94,28 @@ class Seguridad
             error_log('La contraseña es incorrecta');
             return false;
         }
+    }
+
+    /*****************Validar La IP del cliente****************/
+    final public static function obtenerIpCliente()
+    {
+        $ip = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        } elseif (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+        } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
+            $ip = $_SERVER['HTTP_FORWARDED'];
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+
+        return $ip;
     }
 }

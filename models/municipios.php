@@ -4,25 +4,26 @@ require_once "conexion/conectar.php";
 class Municipios
 {
 
-    public static function lista()
+    public static function lista($idDepartamento)
     {
         $db = new Conectar();
-        $query = "CALL obtenerAreas()";
-        $resultado = $db->query($query);
+        $stmt = $db->prepare("CALL ObtenerMunicipio(?)");
+        $stmt->bind_param("i", $idDepartamento);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
         $datos = [];
         if ($resultado->num_rows) {
             while ($row = $resultado->fetch_assoc()) {
-                $datos[] = [
-                    'idArea' => $row['IdArea'],
-                    'descripcion' => $row['Descripcion'],
-                    'formulario' => $row['Formulario'],
-                    'idEstadoRegistro' => $row['IdEstadoRegistro'],
+                $datos []= [
+                    'IdDepartamento ' => $row['IdDepartamento'],
+                    'Nombre' => $row['Nombre'],
+                    'IdMunicipio' => $row['IdMunicipio']
                 ];
-            } 
+            }
             return $datos;
-        } 
+        }
         return $datos;
-    } 
+    }
 
     public static function obtenerId($id_areas)
     {
@@ -54,9 +55,9 @@ class Municipios
         $db->query($query);
         if ($db->affected_rows) {
             return TRUE;
-        } 
+        }
         return FALSE;
-    } 
+    }
 
     public static function actualizar($id_cliente, $nombre, $ap, $am, $fn, $genero)
     {

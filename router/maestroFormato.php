@@ -10,15 +10,21 @@ use App\config\Seguridad;
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         $tokenCode = Seguridad::validaTokenJwt();
+        if (!$tokenCode) {
+            echo json_encode(ResponseHttp::status404());
+            break;
+        }
         if (isset($_GET['id'])) {
             echo json_encode(MaestroFormato::obtenerId($_GET['id']));
-        } //end if
-        else {
+        } else if (isset($_GET['idr'])) {
+            echo json_encode(MaestroFormato::obtenerResumen($_GET['idr']));
+        } else if (isset($_GET['idp'])) {
+            echo json_encode(MaestroFormato::procesar($_GET['idp']));
+        } else {
             echo json_encode(MaestroFormato::lista());
         } //end else
         break;
     case 'POST':
-        // Validar el token JWT
         $tokenCode = Seguridad::validaTokenJwt();
         if (!$tokenCode) {
             echo json_encode(ResponseHttp::status404()); // Token no válido
@@ -28,18 +34,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $datos = json_decode(file_get_contents('php://input'));
         // Verificar si la decodificación fue exitosa y si los datos contienen las propiedades esperadas
         if (json_last_error() === JSON_ERROR_NONE && isset($datos->IdTipoFormato)) {
-            // Llamar a la función insertar y capturar el IdMaestroFormato generado
-            $idMaestroFormato = MaestroFormato::insertar(
+
+            // Llamar a la función insertar y capturar el IdMaestroFormatoFormato generado
+            $idMaestroFormatoFormato = MaestroFormato::insertar(
                 $datos->IdTipoFormato,
                 $datos->IdUnidadEjecutora,
                 $datos->IdEntidad,
                 $datos->IdDepartamento,
                 $datos->IdMunicipio,
                 $datos->DocumentoProcesado,
-                $datos->FechaDocumentoProcesado,
+                $datos->FechaDocumentoProcesado
             );
-            if ($idMaestroFormato) {
-                echo json_encode(ResponseHttp::status201($idMaestroFormato));
+            if ($idMaestroFormatoFormato) {
+                echo json_encode(ResponseHttp::status201($idMaestroFormatoFormato));
             } else {
                 echo json_encode(ResponseHttp::status400()); // Solicitud incorrecta
             }
@@ -49,6 +56,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
     case 'PUT':
         $tokenCode = Seguridad::validaTokenJwt();
+        if (!$tokenCode) {
+            echo json_encode(ResponseHttp::status404()); // Token no válido
+            break;
+        }
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
             if (MaestroFormato::actualizar($datos->id, $datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
@@ -64,6 +75,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
     case 'DELETE':
         $tokenCode = Seguridad::validaTokenJwt();
+        if (!$tokenCode) {
+            echo json_encode(ResponseHttp::status404()); // Token no válido
+            break;
+        }
         if (isset($_GET['id'])) {
             if (MaestroFormato::eliminar($_GET['id'])) {
                 echo json_encode(ResponseHttp::status200("Registro Eliminado"));
@@ -75,6 +90,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         else {
             echo json_encode(ResponseHttp::status404());
         } //end else
+
         break;
     default:
         echo json_encode(ResponseHttp::status404());

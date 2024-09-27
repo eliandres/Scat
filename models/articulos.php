@@ -1,5 +1,6 @@
 <?php
 require_once "conexion/conectar.php";
+require_once 'config/seguridad.php';
 
 class Articulos
 {
@@ -36,11 +37,11 @@ class Articulos
         return $datos;
     }
 
-    public static function obtenerId($id_areas)
+    public static function obtenerId($idArticulo)
     {
         $db = new Conectar();
         $stmt = $db->prepare("CALL obtenerAreasId(?)");
-        $stmt->bind_param("i", $id_areas);
+        $stmt->bind_param("i", $idArticulo);
         $stmt->execute();
         $resultado = $stmt->get_result();
         $datos = [];
@@ -58,6 +59,42 @@ class Articulos
         return $datos;
     }
 
+
+    public static function obtenerXClasificacion($Cadena)
+    {
+        $db = new Conectar();
+        $stmt = $db->prepare("CALL ObtenerArticulosXClasificacion(?)");
+        $stmt->bind_param("s", $Cadena);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $datos = [];
+        if ($resultado->num_rows) {
+            while ($row = $resultado->fetch_assoc()) {
+                $datos []= [
+                    'Numero' => $row['Numero'],
+                    'DescripcionActivo' => $row['DescripcionActivo'],
+                    'Descripcion' => $row['Descripcion'],
+                    'Codigo' => $row['CodigoActivo'],
+                    'CostoLocal' => $row['CostoLocal'],
+                    'CentroCosto' => $row['CentroCosto'],
+                    'Modelo' => $row['Modelo'],
+                    'IdSerie' => $row['IdSerie'],
+                    'FechaAdquisicion' => $row['FechaAdquisicion'],
+                    'Municipio' => $row['Municipio'],
+                    'Anio' => $row['Anio'],
+                    'Departamento' => $row['Departamento'],
+                    'Entidad' => $row['Entidad'],
+                    'Clasificacion' => $row['Clasificacion'],
+                    'Longitud' => $row['Longitud'],
+                    'Latitud' => $row['Latitud']
+                ];
+            }
+            return $datos;
+        }
+        return $datos;
+    }
+
+
     public static function insertar($nombre, $ap, $am, $fn, $genero)
     {
         $db = new Conectar();
@@ -70,17 +107,25 @@ class Articulos
         return FALSE;
     }
 
-    public static function actualizar($id_cliente, $nombre, $ap, $am, $fn, $genero)
-    {
+    public static function actualizar(
+        $Numero,
+        $Descripcion,
+        $CodigoActivo,
+        $Modelo,
+        $IdSerie,
+        $EntidadEjecutora,
+        $FechaAdquisicion,
+        $Latitud,
+        $Longitud
+    ) {
         $db = new Conectar();
-        $query = "UPDATE clientes SET
-            nombre='" . $nombre . "', ap='" . $ap . "', am='" . $am . "', fn='" . $fn . "', genero='" . $genero . "' 
-            WHERE id=$id_cliente";
-        $db->query($query);
-        if ($db->affected_rows) {
-            return TRUE;
-        } //end if
-        return FALSE;
+        $stmt = $db->prepare("CALL ActualizarArticulos(?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("sssssssss", $Numero, $Descripcion, $CodigoActivo, $Modelo, $IdSerie, $EntidadEjecutora, $FechaAdquisicion, $Latitud, $Longitud);
+        // Ejecuta la consulta
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
     } //end update
 
     public static function eliminar($id_cliente)

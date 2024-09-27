@@ -11,10 +11,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         $tokenCode = Seguridad::validaTokenJwt();
         if (isset($_GET['id'])) {
-            echo json_encode(Municipios::obtenerId($_GET['id']));
+            echo json_encode(Municipios::lista($_GET['id']));
         } //end if
         else {
-            echo json_encode(Municipios::lista());
+            echo json_encode(Municipios::lista($_GET['id']));
         } //end else
         break;
     case 'POST':
@@ -22,7 +22,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
         $datos = json_decode(file_get_contents('php://input'));
         if ($datos != NULL) {
             if (Municipios::insertar($datos->nombre, $datos->ap, $datos->am, $datos->fn, $datos->genero)) {
-                echo json_encode(ResponseHttp::status201());
+                echo json_encode(ResponseHttp::status201("No hay"));
             } //end if
             else {
                 echo json_encode(ResponseHttp::status400());
